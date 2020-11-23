@@ -10,10 +10,13 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Update bundler
+          command: sudo gem update --system
+      - run:
           name: Which bundler?
           command: bundle -v
       - ruby/bundle-install
       - run: 
           name: Test Suite
-          command: bundle execrake
+          command: bundle exec rake
 
