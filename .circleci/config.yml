@@ -21,7 +21,7 @@ jobs:
       - ruby/bundle-install
       - run: 
           name: Setup rails db
-          command: rails:db:create 
+          command: rails db:create 
       - run: 
           name: Setup rails migrations
           command: rails db:migrate 
