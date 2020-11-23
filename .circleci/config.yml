@@ -20,6 +20,12 @@ jobs:
           command: bundle -v
       - ruby/bundle-install
       - run: 
+          name: Setup rails db
+          command: rails:db:create 
+      - run: 
+          name: Setup rails migrations
+          command: rails db:migrate 
+      - run: 
           name: Test Suite
           command: bundle exec rspec
 
