@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  postgres-rspec: sbc-orbs/postgres-rspec@0.0.28
 jobs:
   build:
     working_directory: ~/myapp
@@ -18,18 +20,22 @@ jobs:
           name: Bundle Install
           command: bin/bundle install --path vendor/bundle
 
-      - run:
-          name: Wait for DB
-          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+  #     - run:
+  #         name: Wait for DB
+  #         command: dockerize -wait tcp://localhost:5432 -timeout 1m
 
-      - run:
-          name: Database create 
-          command: bin/rails db:create
+  #     - run:
+  #         name: Database create 
+  #         command: bin/rails db:create
 
-      - run:
-          name: Database setup
-          command: bin/rails db:schema:load --trace
+  #     - run:
+  #         name: Database setup
+  #         command: bin/rails db:schema:load --trace
 
-      - run:
-          name: Run tests
-          command: bin/rails rspec 
+  #     - run:
+  #         name: Run tests
+  #         command: bin/rails rspec 
+
+  #         orbs:
+  # postgres-rspec: sbc-orbs/postgres-rspec@0.0.28
+  # version: 2.1
