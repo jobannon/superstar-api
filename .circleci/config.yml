@@ -27,5 +27,5 @@ workflows:
           db-port: '5432'
           executor: ruby_with_db
           # parallelism: 4
-          requires:
-            - rails/assets
+          # requires:
+          #   - rails/assets
