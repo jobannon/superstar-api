@@ -45,7 +45,8 @@ orbs:
 
 jobs:
   build:
-    executor: ruby/default
+    docker:
+      - image: circleci/ruby:2.7.1
     steps:
       - checkout
       # - run:
