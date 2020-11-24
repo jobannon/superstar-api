@@ -11,21 +11,15 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Update bundler
-          command: sudo gem update --system
-      - run: 
-          name: Update Ruby Version
-          command:  bundle update --ruby
-      - run:
           name: Which bundler?
           command: bundle -v
       - ruby/bundle-install
-      # - run: 
-      #     name: Setup rails db
-      #     command: rake db:create 
-      # - run: 
-      #     name: Setup rails migrations
-      #     command: rake db:migrate 
-      # - run: 
-      #     name: Test Suite
-      #     command: bundle exec rspec
+      - run: 
+          name: Setup rails db
+          command: bundle exec rake db:create 
+      - run: 
+          name: Setup rails migrations
+          command: bundle exec rake db:migrate 
+      - run: 
+          name: Test Suite
+          command: bundle exec rspec
