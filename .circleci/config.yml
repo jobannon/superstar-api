@@ -1,25 +1,31 @@
 version: 2.1
-orbs:
-  ruby: circleci/ruby@0.1.2 
-  aws-elastic-beanstalk: circleci/aws-elastic-beanstalk@1.0.0
-
 jobs:
   build:
+    working_directory: ~/myapp
     docker:
       - image: circleci/ruby:2.7.1
-    executor: ruby/default
+        environment:
+          DATABASE_URL: "postgres://myapp@localhost/myapp-test"
+      - image: circleci/postgres:9.5-alpine
+        environment:
+          POSTGRES_USER: myapp
+          POSTGRES_DB: myapp-test
+          POSTGRES_PASSWORD: ""
     steps:
       - checkout
+
       - run:
-          name: Which bundler?
-          command: bundle -v
-      - ruby/bundle-install
-      - run: 
-          name: Setup rails db
-          command: bundle exec rake db:create 
-      - run: 
-          name: Setup rails migrations
-          command: bundle exec rake db:migrate 
-      - run: 
-          name: Test Suite
-          command: bundle exec rspec
+          name: Bundle Install
+          command: bin/bundle install --path vendor/bundle
+
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      - run:
+          name: Database setup
+          command: bin/rails db:schema:load --trace
+
+      - run:
+          name: Run tests
+          command: bin/rails rspec 
