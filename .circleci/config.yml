@@ -12,7 +12,7 @@ jobs:
         environment:
           POSTGRES_USER: superstar_api
           POSTGRES_DB: superstar_api_test
-          POSTGRES_PASSWORD: ""
+          POSTGRES_PASSWORD: "password"
     steps:
       - checkout
 
