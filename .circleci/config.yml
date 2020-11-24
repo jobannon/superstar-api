@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   ruby: circleci/ruby@0.1.2 
+  aws-elastic-beanstalk: circleci/aws-elastic-beanstalk@1.0.0
 
 jobs:
   build:
@@ -19,13 +20,12 @@ jobs:
           name: Which bundler?
           command: bundle -v
       - ruby/bundle-install
-      - run: 
-          name: Setup rails db
-          command: rails db:create 
-      - run: 
-          name: Setup rails migrations
-          command: rails db:migrate 
-      - run: 
-          name: Test Suite
-          command: bundle exec rspec
-
+      # - run: 
+      #     name: Setup rails db
+      #     command: rake db:create 
+      # - run: 
+      #     name: Setup rails migrations
+      #     command: rake db:migrate 
+      # - run: 
+      #     name: Test Suite
+      #     command: bundle exec rspec
