@@ -61,4 +61,4 @@ jobs:
       # - ruby/bundle-install
       - run:
           name: Bundle Install
-          command: install
+          command: sbc-orbs/install
