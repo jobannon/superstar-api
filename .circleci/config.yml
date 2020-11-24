@@ -14,14 +14,14 @@ version: 2.1
 workflows:
   rspec:
     jobs:
-      - rails/rb-deps:
-          executor: ruby
+      # - rails/rb-deps:
+          # executor: ruby
       # - rails/js-deps:
       #     executor: ruby
-      - rails/assets:
-          executor: ruby
-          requires:
-            - rails/rb-deps
+      # - rails/assets:
+          # executor: ruby
+          # requires:
+            # - rails/rb-deps
             # - rails/js-deps
       - rails/rspec:
           db-port: '5432'
