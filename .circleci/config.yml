@@ -1,64 +1,31 @@
-# version: 2.1
-# orbs:
-#   postgres-rspec: sbc-orbs/postgres-rspec@0.0.28
-# jobs:
-#   build:
-#     # working_directory: ~/myapp
-#     # docker:
-#     #   - image: circleci/ruby:2.7.1
-#     #     environment:
-#     #       DATABASE_URL: "postgres://myapp@localhost/myapp-test"
-#     #   - image: circleci/postgres:9.5-alpine
-#     #     environment:
-#     #       POSTGRES_USER: myapp
-#     #       POSTGRES_DB: myapp-test
-#     #       POSTGRES_PASSWORD: ""
-#     steps:
-#       - checkout
-
-#       - run:
-#           name: Bundle Install
-#           command: postgres-rspec/install
-
-#   #     - run:
-#   #         name: Wait for DB
-#   #         command: dockerize -wait tcp://localhost:5432 -timeout 1m
-
-#   #     - run:
-#   #         name: Database create 
-#   #         command: bin/rails db:create
-
-#   #     - run:
-#   #         name: Database setup
-#   #         command: bin/rails db:schema:load --trace
-
-#   #     - run:
-#   #         name: Run tests
-#   #         command: bin/rails rspec 
-
-#   #         orbs:
-#   # postgres-rspec: sbc-orbs/postgres-rspec@0.0.28
-#   # version: 2.1
-version: 2.1
-orbs:
-  postgres-rspec: sbc-orbs/postgres-rspec@0.0.28
-
-jobs:
-  build:
+executors:
+  ruby:
     docker:
-      - image: circleci/ruby:2.7.1
-    steps:
-      - checkout
-      # - run:
-      #     name: Update bundler
-      #     command: sudo gem update --system
-      # - run: 
-      #     name: Update Ruby Version
-      #     command:  bundle update --ruby
-      # - run:
-      #     name: Which bundler?
-      #     command: bundle -v
-      # - ruby/bundle-install
-      - run:
-          name: Bundle Install
-          command: sbc-orbs/install
+      - image: 'circleci/ruby:2.7.1-node-browsers'
+  ruby_with_db:
+    docker:
+      - image: 'circleci/ruby:2.7.1-node-browsers'
+      - image: 'circleci/postgres:12.1-alpine-ram'
+    environment:
+      DATABASE_URL: 'postgres://postgres:postgres@127.0.0.1:5432'
+orbs:
+  rails: medpeer/rails@1.2.0
+version: 2.1
+workflows:
+  rspec:
+    jobs:
+      - rails/rb-deps:
+          executor: ruby
+      - rails/js-deps:
+          executor: ruby
+      - rails/assets:
+          executor: ruby
+          requires:
+            - rails/rb-deps
+            - rails/js-deps
+      - rails/rspec:
+          db-port: '5432'
+          executor: ruby_with_db
+          parallelism: 4
+          requires:
+            - rails/assets
