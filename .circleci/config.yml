@@ -61,4 +61,4 @@ jobs:
       # - ruby/bundle-install
       - run:
           name: Bundle Install
-          command: postgres-rspec/install
+          command: install
