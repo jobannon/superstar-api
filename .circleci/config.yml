@@ -1,0 +1,33 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/superstar_api
+    docker:
+      - image: circleci/ruby:2.7.2
+        environment:
+          PGHOST: localhost
+          PGUSER: superstar_api
+          RAILS_ENV: test
+      - image: postgres:9.5
+        environment:
+          POSTGRES_USER: superstar_api
+          POSTGRES_DB: superstar_api_test
+          POSTGRES_PASSWORD: "password"
+    steps:
+      - checkout
+
+
+      # Bundle install dependencies
+      - run: bundle install --path vendor/bundle
+
+      # Wait for DB
+      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      # Setup the environment
+      # - run: cp .env.example .env
+
+      # Setup the database
+      - run: bundle exec rake db:setup
+
+      # Run the tests
+      - run: bundle exec rspec
