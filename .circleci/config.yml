@@ -1,7 +1,31 @@
-version: 2.1
+executors:
+  ruby:
+    docker:
+      - image: 'circleci/ruby:2.7.2'
+  ruby_with_db:
+    docker:
+      - image: 'circleci/ruby:2.7.2'
+      - image: 'circleci/postgres:12.1-alpine-ram'
+    environment:
+      DATABASE_URL: 'postgres://postgres:postgres@127.0.0.1:5432'
 orbs:
-  rails-orb: spyscape/rails-orb@0.3.1
+  rails: medpeer/rails@1.2.0
+version: 2.1
 workflows:
-  use-orb-job: 
-    jobs: 
-      - rails-orb/build
+  rspec:
+    jobs:
+      - rails/rb-deps:
+          executor: ruby
+      # - rails/js-deps:
+      #     executor: ruby
+      - rails/assets:
+          executor: ruby
+          requires:
+            - rails/rb-deps
+            # - rails/js-deps
+      - rails/rspec:
+          db-port: '5432'
+          executor: ruby_with_db
+          # parallelism: 4
+          requires:
+            - rails/assets
