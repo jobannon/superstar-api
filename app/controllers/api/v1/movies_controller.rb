@@ -7,6 +7,6 @@ class Api::V1::MoviesController < ApplicationController
   private
 
   def movie_params
-    params.permit(:s, :i, :page)
+    params.permit(:s, :i, :page, :apikey)
   end
 end
