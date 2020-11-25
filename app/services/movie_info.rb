@@ -1,7 +1,7 @@
 class MovieInfo
 
-  def initialize(query)
-    @query_params = search_term.to_query
+  def initialize(incoming)
+    @query_params = incoming.to_query
   end
 
   def get_search_results
