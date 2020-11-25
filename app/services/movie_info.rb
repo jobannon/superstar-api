@@ -1,7 +1,7 @@
 class MovieInfo
 
-  def initialize(search_term)
-    @search_term = search_term
+  def initialize(incoming)
+    @query_params = incoming.to_query
   end
 
   def get_search_results
@@ -11,7 +11,7 @@ class MovieInfo
   private
 
   def get_json
-    response = Faraday.get("http://www.omdbapi.com?s=#{@search_term}&apikey=#{ENV['OMDB_KEY']}")
+    response = Faraday.get("http://www.omdbapi.com?#{@query_params}&apikey=#{ENV['OMDB_KEY']}")
     JSON.parse(response.body)
   end
 
