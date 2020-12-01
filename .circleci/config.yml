@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/superstar_api
     docker:
-      - image: circleci/ruby:2.7.2
+      - image: circleci/ruby:2.7.0
         environment:
           PGHOST: localhost
           PGUSER: superstar_api
