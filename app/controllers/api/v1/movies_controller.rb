@@ -1,6 +1,5 @@
 class Api::V1::MoviesController < ApplicationController
   def index
-
     render json: MovieInfo.new(movie_params).get_search_results
   end
 
