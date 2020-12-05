@@ -4,8 +4,7 @@ Rails.application.routes.draw do
     namespace "v1" do 
       get "/movies", to: "movies#index"
 
-      post "/thumbup/:id", to: "thumb_counter#index"
-      post "/thumbdown/:id", to: "thumb_counter#index"
+      post "/votes", to: "votes#update"
     end
   end
 end

@@ -11,21 +11,20 @@ RSpec.describe "when a search is executed" do
     expect(response).to be_successful
     expect(response).to have_http_status(200)
 
-    parsed['Search'].each do |movie|
+    parsed.each do |movie|
       assert_equal true, movie['Title'].downcase.include?(search_term), "entry does not match search term (#{search_term})"
 
       # happy path - has required keys
-      required_keys = %w[Title Year imdbID Type Poster]
+      required_keys = %w[Title Year imdbID Type Poster count details]
       movie.all? do |key, value|
         assert_equal true, required_keys.include?(key), "this entry is missing one or more required keys (#{required_keys})"
-        assert_equal true, value.is_a?(String), "this value #{value} is not a string"
+        assert_equal true, (value.is_a?(String) || value.is_a?(Numeric) || value.is_a?(Hash)), "this value #{value} is not a string"
       end
 
       # sad path- test will fail if missing a key
       required_keys = %w[Extra_key]
       movie.all? do |key, value|
         assert_equal false, required_keys.include?(key)
-        assert_equal true, value.is_a?(String), "this value #{value} is not a string"
       end
 
       assert_equal false, movie['Year'].nil?
@@ -87,7 +86,7 @@ RSpec.describe "when a search is executed" do
     expect(response).to have_http_status(200)
     parsed = JSON.parse(response.body)
 
-    searched_movies = parsed['Search']
+    searched_movies = parsed
     searched_movies.each do |movie|
       get "/api/v1/movies?i=#{movie['imdbID']}&apikey=#{ENV['OMDB_KEY']}"
 
@@ -119,7 +118,7 @@ RSpec.describe "when a search is executed" do
     parsed = JSON.parse(response.body)
 
     assert_equal 200, response.status
-    searched_movies = parsed['Search']
+    searched_movies = parsed
 
     searched_movies.each do |movie|
       poster_url = movie['Poster']
@@ -152,7 +151,7 @@ RSpec.describe "when a search is executed" do
 
       parsed = JSON.parse(response.body)
 
-      searched_movies = parsed['Search']
+      searched_movies = parsed
       searched_movies.each do |movie|
         assert_equal false, @seen_movie_ids.include?(movie['imdbID']), "There is a duplicate movie with imdbID - #{movie['imdbID']} within page - #{page_num}"
         @seen_movie_ids << movie['imdbID']
@@ -172,7 +171,7 @@ RSpec.describe "when a search is executed" do
       get "/api/v1/movies?s=#{search_term}&apikey=#{ENV['OMDB_KEY']}&page=#{page_num}"
 
       parsed = JSON.parse(response.body)
-      searched_movies = parsed['Search']
+      searched_movies = parsed
 
       # force duplication in @seen_movie_ids
       searched_movies.each { |movie| @seen_movie_ids << movie['imdbID'] }
